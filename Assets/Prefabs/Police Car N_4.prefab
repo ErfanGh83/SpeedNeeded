@@ -49,23 +49,23 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9e5c2501cc427b34daa59f785d2892c2, type: 2}
     - target: {fileID: -7511558181221131132, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: eb5ee08e1b0e3e741af903e3cf81b196, type: 2}
     - target: {fileID: -2507806918564812868, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9e5c2501cc427b34daa59f785d2892c2, type: 2}
     - target: {fileID: -2078742438007466072, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9e5c2501cc427b34daa59f785d2892c2, type: 2}
     - target: {fileID: 674938765544902076, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9e5c2501cc427b34daa59f785d2892c2, type: 2}
     - target: {fileID: 919132149155446097, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
@@ -73,7 +73,7 @@ PrefabInstance:
       value: Police Car N_4
       objectReference: {fileID: 0}
     - target: {fileID: 9210965267280825274, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9e5c2501cc427b34daa59f785d2892c2, type: 2}
     m_RemovedComponents: []
@@ -83,6 +83,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1116682767088362966}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5838913306662035019}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3002269764626362702}
   m_SourcePrefab: {fileID: 100100000, guid: ddae4734f30aef14f89e7635cc5d153c, type: 3}
 --- !u!1 &2295116759664368373 stripped
 GameObject:
@@ -110,3 +116,42 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.1332467, y: 1.382391, z: 4.9746904}
   m_Center: {x: -0.0000019073486, y: 0.97462654, z: -0.1101563}
+--- !u!114 &-5838913306662035019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2295116759664368373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fccac5b9be372f7489ca5182b23969ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrafficCar
+--- !u!54 &-3002269764626362702
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2295116759664368373}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

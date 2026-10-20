@@ -25,11 +25,8 @@ public class CarController : MonoBehaviour
 
     [Header("Input")]
     [Tooltip("How far the Move axis must be pushed to count as a lane change (matters for gamepad sticks).")]
-    [SerializeField, Range(0.1f, 1f)] float inputThreshold = 0.5f;
+    [SerializeField, Range(0.1f, 1f)] float inputThreshold = 0.5f; 
 
-    [SerializeField] bool logInput = true;
-
-    /// <summary>Fired only when the car actually changes lane (not at the road edge).</summary>
     public event Action OnTurnLeft;
     public event Action OnTurnRight;
 
@@ -80,6 +77,7 @@ public class CarController : MonoBehaviour
 
     void OnMove(InputAction.CallbackContext ctx)
     {
+        if (!GameManager.IsPlaying) return;
         float x = ctx.ReadValue<Vector2>().x;
 
         int dir = 0;
@@ -104,7 +102,6 @@ public class CarController : MonoBehaviour
         if (target == currentLane) return; // already at the edge
 
         currentLane = target;
-        if (logInput) Debug.Log($"[{name}] lane -> {currentLane}", this);
 
         if (dir < 0) OnTurnLeft?.Invoke();
         else OnTurnRight?.Invoke();
@@ -122,7 +119,7 @@ public class CarController : MonoBehaviour
 
     // Lane 1 sits at centerOffset, lanes 0 and 2 are one laneDistance away on each side.
     // Read every frame, so you can tune laneDistance live in the inspector.
-    float GetLaneX(int lane)
+    public float GetLaneX(int lane)
     {
         return centerOffset + (lane - 1) * laneDistance;
     }

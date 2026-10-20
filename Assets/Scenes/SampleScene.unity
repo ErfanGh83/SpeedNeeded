@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 20fca97cf5b8e92459331b3cd74c4be1, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 410087040}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -205,13 +205,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.46803188, y: -0, z: -0, w: 0.8837116}
-  m_LocalPosition: {x: 0.4, y: 14.67, z: -18.23}
+  m_LocalRotation: {x: 0.40085474, y: -0, z: -0, w: 0.9161417}
+  m_LocalPosition: {x: 0.4, y: 13.82, z: -21.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 55.813, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 47.263, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,7 +303,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -436,6 +436,83 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &619670984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 619670986}
+  - component: {fileID: 619670985}
+  m_Layer: 0
+  m_Name: ItemSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &619670985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619670984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e46556789547874fb337e6442a7f9f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSpawner
+  laneSource: {fileID: 1168561986}
+  fuel: {fileID: 1168561987}
+  health: {fileID: 1168561989}
+  entries:
+  - label: Fuel
+    pool: {fileID: 1867335560}
+    weight: 45
+    groupSize: {x: 1, y: 1}
+    spacing: 0
+    need: 1
+    lowBoost: 0
+    skipWhenFull: 0
+  - label: Heal
+    pool: {fileID: 1274178150}
+    weight: 5
+    groupSize: {x: 1, y: 1}
+    spacing: 0
+    need: 2
+    lowBoost: 0
+    skipWhenFull: 0
+  - label: Money
+    pool: {fileID: 1207787115}
+    weight: 50
+    groupSize: {x: 1, y: 1}
+    spacing: 0
+    need: 0
+    lowBoost: 0
+    skipWhenFull: 0
+  spawnInterval: {x: 2, y: 4}
+  despawnDistance: 100
+  avoidOverlap: 1
+  overlapHalfExtents: {x: 1, y: 1, z: 2}
+  logSpawns: 1
+--- !u!4 &619670986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619670984}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.05723, y: 0.1, z: 29.29925}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,7 +670,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 15.561739, y: 0.2, z: 38.95284}
+  m_LocalScale: {x: 15.561739, y: 0.2, z: 65.96274}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -611,9 +688,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScrollTexture
   targetRenderer: {fileID: 0}
-  scrollSpeed: {x: 0, y: -2}
   textureProperty: _BaseMap
-  tiling: {x: 1, y: 2}
+  roadLength: 200
+  tilingY: 2
+  direction: -1
+  baseScrollSpeed: 100
+  speedMultiplier: 1
 --- !u!1 &1168561981
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,6 +705,9 @@ GameObject:
   - component: {fileID: 1168561982}
   - component: {fileID: 1168561986}
   - component: {fileID: 1168561985}
+  - component: {fileID: 1168561988}
+  - component: {fileID: 1168561987}
+  - component: {fileID: 1168561989}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -660,7 +743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f029701d3f2cf1a4eba22673867c9f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarAnimationTrigger
-  animator: {fileID: 0}
+  animator: {fileID: 1498676961}
   turnLeftTrigger: TurnLeft
   turnRightTrigger: TurnRight
 --- !u!114 &1168561986
@@ -678,9 +761,59 @@ MonoBehaviour:
   laneDistance: 4
   centerOffset: 0
   startLane: 1
-  laneChangeSpeed: 12
+  laneChangeSpeed: 15
   inputThreshold: 0.5
-  logInput: 1
+--- !u!114 &1168561987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168561981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e007b429174ad9f4788de20ed37b8dd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FuelSystem
+  maxFuel: 100
+  drainPerSecond: 2
+  logFuelChanges: 1
+--- !u!114 &1168561988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168561981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c06008d56c929ee4d8f9dcd6d750c679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSpeed
+  startBaseSpeed: 20
+  maxBaseSpeed: 50
+  baseSpeedGain: 0.05
+  startSpeedLimit: 50
+  maxSpeedLimit: 100
+  speedLimitGain: 0.08
+  acceleration: 12
+  deceleration: 8
+  boostFuelPerSecond: 6
+  fuel: {fileID: 1168561987}
+--- !u!114 &1168561989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168561981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08cc014f5cce8ff42bf2d101254e5b72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
+  maxHealth: 3
+  invincibleSeconds: 1.5
 --- !u!1001 &1194667407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -763,6 +896,102 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2577748686464113156, guid: 7935fe550f297ad478d9cd81cfc1192d, type: 3}
   m_PrefabInstance: {fileID: 1194667407}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1207787114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1207787116}
+  - component: {fileID: 1207787115}
+  m_Layer: 0
+  m_Name: MoneyPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1207787115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207787114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc45b43803470324aa7a21c7bf13f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPool
+  prefabs:
+  - {fileID: 4456086332813374292, guid: 45ac19e41a0ac5341954fcbcb354e099, type: 3}
+  prewarmPerPrefab: 4
+  canGrow: 1
+--- !u!4 &1207787116
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207787114}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1274178149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1274178151}
+  - component: {fileID: 1274178150}
+  m_Layer: 0
+  m_Name: HealthPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1274178150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274178149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc45b43803470324aa7a21c7bf13f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPool
+  prefabs:
+  - {fileID: 1508952360055070819, guid: 492b5cc2fa396d94b9538dcde58c760c, type: 3}
+  prewarmPerPrefab: 4
+  canGrow: 1
+--- !u!4 &1274178151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274178149}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1498676959
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,6 +1048,159 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1694252928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1694252930}
+  - component: {fileID: 1694252929}
+  m_Layer: 0
+  m_Name: CarPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1694252929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694252928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc45b43803470324aa7a21c7bf13f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPool
+  prefabs:
+  - {fileID: 3786326439804512758, guid: 7d340a523c0d9954086ceb24862bb354, type: 3}
+  - {fileID: 793685457875359081, guid: 8b0a1f6e7d9cef64f907dd22ec23a5d5, type: 3}
+  - {fileID: 745966575250574594, guid: bd74a6ec1e7cc7b408d1dfc2ebe00bf0, type: 3}
+  - {fileID: 3859950695711406603, guid: b6da07b39b74b4047b0df781eb3a9233, type: 3}
+  - {fileID: 2295116759664368373, guid: c05550e597b8bd24fa80b20f26af52f1, type: 3}
+  - {fileID: 7199546247579947592, guid: bb35c8b3adc9dcd40946d0f5a588758b, type: 3}
+  prewarmPerPrefab: 4
+  canGrow: 1
+--- !u!4 &1694252930
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694252928}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1840403033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1840403035}
+  - component: {fileID: 1840403034}
+  m_Layer: 0
+  m_Name: TrafficSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1840403034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840403033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77714233d16995a4490a1af2b42e2511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrafficSpawner
+  laneSource: {fileID: 1168561986}
+  entries:
+  - pool: {fileID: 1694252929}
+    weight: 100
+    speedRange: {x: 0, y: 0}
+  spawnInterval: {x: 0.8, y: 2}
+  laneCooldown: 1.5
+  despawnDistance: 60
+--- !u!4 &1840403035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840403033}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 30.91}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1867335558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1867335559}
+  - component: {fileID: 1867335560}
+  m_Layer: 0
+  m_Name: FuelPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1867335559
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867335558}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1867335560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867335558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc45b43803470324aa7a21c7bf13f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPool
+  prefabs:
+  - {fileID: 6892502103269379034, guid: 10cc1a587188b724e917b21de75b7be7, type: 3}
+  prewarmPerPrefab: 4
+  canGrow: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -828,3 +1210,9 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 943533822}
   - {fileID: 1168561982}
+  - {fileID: 1694252930}
+  - {fileID: 1840403035}
+  - {fileID: 619670986}
+  - {fileID: 1867335559}
+  - {fileID: 1274178151}
+  - {fileID: 1207787116}
