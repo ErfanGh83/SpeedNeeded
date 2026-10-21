@@ -16,7 +16,7 @@ public class Spinner : MonoBehaviour
     [SerializeField] bool randomizePhase = true;
 
     [Header("Game state")]
-    [Tooltip("Freeze while paused, in the menu or after game over.")]
+    [Tooltip("ON: only spin while the game is running (frozen in the menu, paused and game over). OFF: always spin, even while paused.")]
     [SerializeField] bool onlyWhilePlaying = true;
 
     float phase;
@@ -44,11 +44,14 @@ public class Spinner : MonoBehaviour
     {
         if (onlyWhilePlaying && !GameManager.IsPlaying) return;
 
-        transform.Rotate(rotationSpeed * Time.deltaTime, space);
+        float dt = onlyWhilePlaying ? Time.deltaTime : Time.unscaledDeltaTime;
+        float t = onlyWhilePlaying ? Time.time : Time.unscaledTime;
+
+        transform.Rotate(rotationSpeed * dt, space);
 
         if (bob)
         {
-            float offset = Mathf.Sin(Time.time * bobSpeed + phase) * bobHeight;
+            float offset = Mathf.Sin(t * bobSpeed + phase) * bobHeight;
 
             Vector3 p = transform.localPosition;
             p.y += offset - appliedOffset; // apply only the change, so it never drifts

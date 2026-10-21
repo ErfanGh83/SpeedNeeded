@@ -107,7 +107,7 @@ MonoBehaviour:
       type: {class: URPReflectionProbeSettings, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Universal.Runtime}
       data:
         version: 1
-        useReflectionProbeRotation: 1
+        useReflectionProbeRotation: 0
     - rid: 5747374308340793344
       type: {class: UniversalRenderPipelineEditorAssets, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.Runtime}
       data:
@@ -265,7 +265,7 @@ MonoBehaviour:
       type: {class: LightmapSamplingSettings, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
       data:
         m_Version: 1
-        m_UseBicubicLightmapSampling: 0
+        m_UseBicubicLightmapSampling: 1
     - rid: 6588237625532874760
       type: {class: RenderingDebuggerRuntimeResources, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
       data:

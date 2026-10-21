@@ -9,7 +9,7 @@ public class FuelSystem : MonoBehaviour
     [SerializeField] float drainPerSecond = 2f;
 
     [Header("Debug")]
-    [SerializeField] bool logFuelChanges = true;
+    [SerializeField] bool logFuelChanges = false;
 
     public float Fuel { get; private set; }
     public float MaxFuel => maxFuel;

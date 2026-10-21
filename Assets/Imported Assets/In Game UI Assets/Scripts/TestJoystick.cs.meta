@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f565ea794cb46c44cba52ba0c89ac5c8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251863
+  packageName: In Game UI
+  packageVersion: 1.1
+  assetPath: Assets/In Game UI Assets/Scripts/TestJoystick.cs
+  uploadId: 619902

@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public enum GameState { Menu, Running, Paused, GameOver }
 
-// Runs before other scripts, so Instance exists when they subscribe to events in OnEnable
 [DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
 {
@@ -23,7 +22,6 @@ public class GameManager : MonoBehaviour
     [Header("Debug")]
     [SerializeField] bool logEvents = true;
 
-    // These survive the scene reload done by Restart() / ReturnToMenu()
     static bool skipMenuOnNextLoad;
     static bool forceMenuOnNextLoad;
 
@@ -34,14 +32,14 @@ public class GameManager : MonoBehaviour
     public int Score => Mathf.FloorToInt(Distance * pointsPerMeter) + bonusScore;
     public int HighScore { get; private set; }
     public bool IsNewHighScore { get; private set; }
-    public int RunCoins { get; private set; }
-    public int TotalMoney { get; private set; }
+    public int RunCoins => MoneyStore.RunEarned;
+    public int TotalMoney => MoneyStore.Balance;
     public string GameOverReason { get; private set; } = "";
 
     public event Action<GameState> OnStateChanged;
-    public event Action OnRunStarted;               // new run only (not on resume)
+    public event Action OnRunStarted;
     public event Action<int> OnScoreChanged;
-    public event Action<int, int> OnCoinsChanged;   // (this run, total saved)
+    public event Action<int, int> OnCoinsChanged;
 
     InputSystem_Actions input;
     int bonusScore;
@@ -53,7 +51,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
 
         HighScore = SaveSystem.HighScore;
-        TotalMoney = SaveSystem.Money;
 
         input = new InputSystem_Actions();
     }
@@ -79,23 +76,21 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Esc pauses/resumes (UI > Cancel in the default Input Actions asset).
-        // WasPressedThisFrame still works while Time.timeScale is 0.
         if (input.UI.Cancel.WasPressedThisFrame()) TogglePause();
     }
 
-    // ---------- State control (hook these to UI buttons later) ----------
     public void StartRun()
     {
         Distance = 0f;
         bonusScore = 0;
-        RunCoins = 0;
         lastReportedScore = 0;
         IsNewHighScore = false;
         GameOverReason = "";
 
+        MoneyStore.BeginRun();
+
         OnScoreChanged?.Invoke(0);
-        OnCoinsChanged?.Invoke(0, TotalMoney);
+        OnCoinsChanged?.Invoke(RunCoins, TotalMoney);
 
         SetState(GameState.Running);
         OnRunStarted?.Invoke();
@@ -123,7 +118,6 @@ public class GameManager : MonoBehaviour
             SaveSystem.HighScore = HighScore;
         }
 
-        SaveSystem.Money = TotalMoney;
         SaveSystem.Save();
 
         if (logEvents)
@@ -131,20 +125,18 @@ public class GameManager : MonoBehaviour
 
         SetState(GameState.GameOver);
     }
+
     public void Restart()
     {
         skipMenuOnNextLoad = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    /// <summary>Reloads the scene and stays in the Menu state.</summary>
     public void ReturnToMenu()
     {
         forceMenuOnNextLoad = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
-    // ---------- Run data (called by other systems) ----------
 
     public void AddDistance(float meters)
     {
@@ -166,17 +158,12 @@ public class GameManager : MonoBehaviour
     {
         if (!IsRunning) return;
 
-        RunCoins += amount;
-        TotalMoney += amount;
-        SaveSystem.Money = TotalMoney; // written to disk on game over / quit
-
+        MoneyStore.Add(amount);
         bonusScore += amount * pointsPerCoin;
 
         OnCoinsChanged?.Invoke(RunCoins, TotalMoney);
         RefreshScore();
     }
-
-    // ---------- Internals ----------
 
     void RefreshScore()
     {

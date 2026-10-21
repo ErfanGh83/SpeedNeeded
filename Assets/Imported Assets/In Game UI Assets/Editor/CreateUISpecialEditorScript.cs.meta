@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1496989eb49c400418359cf7e97ab38a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251863
+  packageName: In Game UI
+  packageVersion: 1.1
+  assetPath: Assets/In Game UI Assets/Editor/CreateUISpecialEditorScript.cs
+  uploadId: 619902

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a7d61af3adef1b141860f38dac1ecd27
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251863
+  packageName: In Game UI
+  packageVersion: 1.1
+  assetPath: Assets/In Game UI Assets/Resources/prefabs/HealthBar 2.prefab
+  uploadId: 619902
