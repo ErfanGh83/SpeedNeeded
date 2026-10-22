@@ -12,9 +12,12 @@ public class DayNightCycleManager : MonoBehaviour
     [Header("Start")]
     [SerializeField] TimeOfDay startTime = TimeOfDay.Day;
 
-    [Header("Cycle (in score)")]
+    [Header("Cycle Settings")]
+    [SerializeField] bool enableCycle = true;
+
     [Tooltip("Score gained while it stays day.")]
     [SerializeField] int dayScore = 500;
+
     [Tooltip("Score gained while it stays night.")]
     [SerializeField] int nightScore = 300;
 
@@ -40,18 +43,27 @@ public class DayNightCycleManager : MonoBehaviour
     void OnEnable()
     {
         game = GameManager.Instance;
+
         if (game != null)
         {
             game.OnScoreChanged += OnScoreChanged;
             game.OnRunStarted += OnRunStarted;
         }
-        else Debug.LogWarning("DayNightCycleManager: no GameManager in the scene, the cycle will not run.", this);
+        else
+        {
+            Debug.LogWarning(
+                "DayNightCycleManager: no GameManager in the scene, the cycle will not run.",
+                this
+            );
+        }
     }
 
     void Start()
     {
-        if (game != null && game.State == GameState.Menu)
-            SetTime(TimeOfDay.Day);
+        SetTime(enableCycle ? startTime : startTime);
+
+        if (enableCycle && game != null && game.State != GameState.Menu)
+            Evaluate(game.Score);
     }
 
     void OnDisable()
@@ -61,19 +73,27 @@ public class DayNightCycleManager : MonoBehaviour
             game.OnScoreChanged -= OnScoreChanged;
             game.OnRunStarted -= OnRunStarted;
         }
+
         game = null;
     }
 
     void OnDestroy()
     {
-        if (Instance == this) Instance = null;
+        if (Instance == this)
+            Instance = null;
     }
 
-    void OnRunStarted() => Evaluate(game.Score);
+    void OnRunStarted()
+    {
+        if (enableCycle)
+            Evaluate(game.Score);
+    }
 
     void OnScoreChanged(int score)
     {
-        if (game.State == GameState.Menu) return;
+        if (!enableCycle || game.State == GameState.Menu)
+            return;
+
         Evaluate(score);
     }
 
@@ -82,24 +102,29 @@ public class DayNightCycleManager : MonoBehaviour
         int day = Mathf.Max(1, dayScore);
         int night = Mathf.Max(1, nightScore);
 
-        // Starting at night just shifts the position in the cycle by one day length
-        int pos = (score + (startTime == TimeOfDay.Night ? day : 0)) % (day + night);
+        int pos = (score + (startTime == TimeOfDay.Night ? day : 0))
+                  % (day + night);
 
         SetTime(pos < day ? TimeOfDay.Day : TimeOfDay.Night);
     }
 
     void SetTime(TimeOfDay time)
     {
-        if (time == Current) return;
+        if (time == Current)
+            return;
 
         Current = time;
-        if (logChanges) Debug.Log($"[DayNightCycleManager] {time} (score {game.Score}).", this);
+
+        if (logChanges)
+            Debug.Log($"[DayNightCycleManager] {time} (score {game?.Score ?? 0}).", this);
+
         Changed?.Invoke(time);
     }
 
     [ContextMenu("Toggle Now")]
     void ToggleNow()
     {
-        if (Application.isPlaying) SetTime(Current == TimeOfDay.Day ? TimeOfDay.Night : TimeOfDay.Day);
+        if (Application.isPlaying)
+            SetTime(Current == TimeOfDay.Day ? TimeOfDay.Night : TimeOfDay.Day);
     }
 }

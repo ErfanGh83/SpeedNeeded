@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerSpeed : MonoBehaviour
@@ -29,6 +30,10 @@ public class PlayerSpeed : MonoBehaviour
     public float BaseSpeed { get; private set; }
     public float SpeedLimit { get; private set; }
     public bool IsBoosting { get; private set; }
+
+    public float BoostFactor => SpeedLimit > BaseSpeed ? Mathf.Clamp01(Mathf.InverseLerp(BaseSpeed, SpeedLimit, CurrentSpeed)) : 0f;
+
+    public event Action<bool> OnBoostChanged;
 
     InputSystem_Actions input;
 
@@ -75,7 +80,7 @@ public class PlayerSpeed : MonoBehaviour
         SpeedLimit = Mathf.MoveTowards(SpeedLimit, maxSpeedLimit, speedLimitGain * dt);
 
         // Boost only while there is fuel
-        IsBoosting = input.Player.Sprint.IsPressed() && (fuel == null || fuel.HasFuel);
+        SetBoosting(input.Player.Sprint.IsPressed() && (fuel == null || fuel.HasFuel));
 
         float target = IsBoosting ? SpeedLimit : BaseSpeed;
         float rate = CurrentSpeed < target ? acceleration : deceleration;
@@ -88,12 +93,20 @@ public class PlayerSpeed : MonoBehaviour
         if (GameManager.Instance != null) GameManager.Instance.AddDistance(CurrentSpeed * dt);
     }
 
+    void SetBoosting(bool value)
+    {
+        if (IsBoosting == value) return;
+
+        IsBoosting = value;
+        OnBoostChanged?.Invoke(value);
+    }
+
     void ResetSpeed()
     {
         BaseSpeed = startBaseSpeed;
         SpeedLimit = startSpeedLimit;
         CurrentSpeed = BaseSpeed;
-        IsBoosting = false;
+        SetBoosting(false);
         WorldSpeed.Value = CurrentSpeed;
     }
 
@@ -102,7 +115,7 @@ public class PlayerSpeed : MonoBehaviour
         if (state != GameState.GameOver) return;
 
         CurrentSpeed = 0f;
-        IsBoosting = false;
+        SetBoosting(false);
         WorldSpeed.Value = 0f;
     }
 }

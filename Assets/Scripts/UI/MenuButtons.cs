@@ -14,7 +14,13 @@ public class MenuButtons : MonoBehaviour
             GameManager.Instance.Resume();
     }
 
-    public void Restart()
+    public void Retry()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.Restart();
+    }
+
+    public void MainMenu()
     {
         if (GameManager.Instance != null)
             GameManager.Instance.ReturnToMenu();

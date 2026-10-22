@@ -240,10 +240,12 @@ public class GroundSpawner : MonoBehaviour
         minZ = b.min.z - pivot.z; maxZ = b.max.z - pivot.z;
     }
 
-    // If your ObjectPool has its own return method, call it here instead
     void ReturnToPool(GameObject obj)
     {
-        obj.SetActive(false);
+        if (obj.TryGetComponent(out PooledObject pooled) && pooled.Pool != null)
+            pooled.Pool.Return(obj);
+        else
+            obj.SetActive(false);
     }
 
 #if UNITY_EDITOR

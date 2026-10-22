@@ -40,10 +40,12 @@ public class GameManager : MonoBehaviour
     public event Action OnRunStarted;
     public event Action<int> OnScoreChanged;
     public event Action<int, int> OnCoinsChanged;
+    public event Action OnHighScoreBeaten;
 
     InputSystem_Actions input;
     int bonusScore;
     int lastReportedScore;
+    bool highScoreBeaten;
 
     void Awake()
     {
@@ -86,6 +88,7 @@ public class GameManager : MonoBehaviour
         lastReportedScore = 0;
         IsNewHighScore = false;
         GameOverReason = "";
+        highScoreBeaten = false;
 
         MoneyStore.BeginRun();
 
@@ -96,8 +99,8 @@ public class GameManager : MonoBehaviour
         OnRunStarted?.Invoke();
     }
 
-    public void Pause()  { if (State == GameState.Running) SetState(GameState.Paused); }
-    public void Resume() { if (State == GameState.Paused)  SetState(GameState.Running); }
+    public void Pause() { if (State == GameState.Running) SetState(GameState.Paused); }
+    public void Resume() { if (State == GameState.Paused) SetState(GameState.Running); }
 
     public void TogglePause()
     {
@@ -172,6 +175,12 @@ public class GameManager : MonoBehaviour
 
         lastReportedScore = score;
         OnScoreChanged?.Invoke(score);
+
+        if (!highScoreBeaten && HighScore > 0 && score > HighScore)
+        {
+            highScoreBeaten = true;
+            OnHighScoreBeaten?.Invoke();
+        }
     }
 
     void SetState(GameState newState)
