@@ -13,15 +13,15 @@ public class BuildingSpawner : MonoBehaviour
         [Tooltip("Y rotation of the buildings on this side (e.g. 0 on the left, 180 on the right so they face the road).")]
         public float yaw = 0f;
 
-        [System.NonSerialized] public float lastEdgeZ; // far edge of the most recently spawned object
-        [System.NonSerialized] public float gapRoll;   // 0..1, decides the empty space before the next object
-        [System.NonSerialized] public float treeRoll;  // 0..1, decides if the next object is a tree
+        [System.NonSerialized] public float lastEdgeZ;
+        [System.NonSerialized] public float gapRoll;
+        [System.NonSerialized] public float treeRoll;
     }
 
     class Active
     {
         public Transform t;
-        public float farEdgeOffset; // far Z edge relative to the pivot
+        public float farEdgeOffset;
     }
 
     [Header("Building pools")]
@@ -43,8 +43,11 @@ public class BuildingSpawner : MonoBehaviour
     [SerializeField] bool randomTreeYaw = true;
 
     [Header("Speed")]
-    [Tooltip("Set this to the same value as the road's base speed (units/s). Everything moves toward -Z.")]
-    [SerializeField] float baseSpeed = 20f;
+    [Tooltip("Constant scroll speed (world units/s) added on top of the game speed. Use the same value as the road's ScrollTexture.")]
+    [SerializeField] float baseScrollSpeed = 5f;
+
+    [Tooltip("Multiplies the game-speed part. Use the same value as the road's ScrollTexture.")]
+    [SerializeField] float speedMultiplier = 1f;
 
     [Header("Road alignment")]
     [Tooltip("Distance from the road center to the road edge. The inner edge of every building is placed here.")]
@@ -84,8 +87,6 @@ public class BuildingSpawner : MonoBehaviour
     [Tooltip("Fill the whole road at start so it isn't empty.")]
     [SerializeField] bool prewarm = true;
 
-    public float BaseSpeed { get => baseSpeed; set => baseSpeed = value; }
-
     readonly List<Active> active = new List<Active>();
     EnvironmentType current = EnvironmentType.City;
     bool initialized;
@@ -114,7 +115,6 @@ public class BuildingSpawner : MonoBehaviour
         }
     }
 
-    // New objects use the new environment. Objects already on screen scroll away on their own.
     void OnEnvironmentChanged(EnvironmentType type)
     {
         current = type;
@@ -125,7 +125,6 @@ public class BuildingSpawner : MonoBehaviour
             Debug.LogWarning($"BuildingSpawner: no tree pools assigned, so {type} has no trees.", this);
     }
 
-    // First fill happens in Update (not Start) so the pools are guaranteed to be set up already
     void Initialize()
     {
         initialized = true;
@@ -145,9 +144,9 @@ public class BuildingSpawner : MonoBehaviour
     {
         if (!initialized) Initialize();
 
-        if (!GameManager.IsPlaying) return; // no movement in menu, pause or game over
+        if (!GameManager.IsPlaying) return;
 
-        float delta = baseSpeed * Time.deltaTime;
+        float delta = (baseScrollSpeed + WorldSpeed.Value * speedMultiplier) * Time.deltaTime;
         float limit = transform.position.z - despawnDistance;
 
         for (int i = active.Count - 1; i >= 0; i--)
@@ -160,7 +159,6 @@ public class BuildingSpawner : MonoBehaviour
             p.z -= delta;
             a.t.position = p;
 
-            // Back to the pool once the whole object (its far edge) is behind the limit
             if (p.z + a.farEdgeOffset < limit)
             {
                 ReturnToPool(a.t.gameObject);
@@ -185,8 +183,6 @@ public class BuildingSpawner : MonoBehaviour
         {
             ObjectPool[] pools = ResolvePools(side, out bool isTree);
 
-            // Nothing can spawn here (e.g. jungle without tree pools): restart the chain at the spawn point,
-            // so when objects come back they don't try to fill the area that is already behind us
             if (pools == null)
             {
                 side.lastEdgeZ = Mathf.Max(side.lastEdgeZ, spawnZ);
@@ -195,8 +191,6 @@ public class BuildingSpawner : MonoBehaviour
 
             bool jungle = current == EnvironmentType.Jungle;
 
-            // Near edge of the next object sits "gap" after the previous object's far edge.
-            // This doesn't depend on its size, so we only take one from the pool when it's time.
             Vector2 range = !isTree ? gap : (jungle ? jungleTreeGap : treeGap);
             float nearEdgeZ = side.lastEdgeZ + Mathf.Lerp(range.x, range.y, side.gapRoll);
             if (nearEdgeZ > spawnZ) return;
@@ -211,17 +205,15 @@ public class BuildingSpawner : MonoBehaviour
             if (obj == null)
             {
                 Debug.LogWarning($"BuildingSpawner: pool '{pool.name}' returned nothing. Is its Prefabs list filled in and Can Grow enabled?", pool);
-                return; // try again next frame
+                return;
             }
 
-            obj.transform.rotation = rot; // in case the pool changed it
+            obj.transform.rotation = rot;
 
-            // Measure the real size of this object, relative to its pivot
             GetFootprint(obj.transform, out float minX, out float maxX, out float minZ, out float maxZ);
 
             float pivotZ = nearEdgeZ - minZ;
 
-            // The edge facing the road goes on the road edge line (plus the setback)
             Vector2 sb = !isTree ? setback : (jungle ? jungleTreeSetback : treeSetback);
             float edgeX = side.direction * (roadHalfWidth + Random.Range(sb.x, sb.y));
             float pivotX = side.direction < 0 ? edgeX - maxX : edgeX - minX;
@@ -241,8 +233,6 @@ public class BuildingSpawner : MonoBehaviour
         side.treeRoll = Random.value;
     }
 
-    // Decides what the next object on this side is: a tree or a building, based on the current environment.
-    // Returns null if nothing can spawn.
     ObjectPool[] ResolvePools(Side side, out bool isTree)
     {
         float chance = GetTreeChance(current);
@@ -254,13 +244,12 @@ public class BuildingSpawner : MonoBehaviour
         bool wantTree = chance >= 1f || (chance > 0f && side.treeRoll < chance);
 
         isTree = wantTree && canTree;
-        if (!isTree && !canBuilding && canTree) isTree = true; // e.g. a village with no building pools
+        if (!isTree && !canBuilding && canTree) isTree = true;
 
         if (isTree) return trees;
         return canBuilding ? buildings : null;
     }
 
-    // Chance that the next object is a tree. City: none, Village: some, Jungle: always.
     float GetTreeChance(EnvironmentType type)
     {
         switch (type)
@@ -271,14 +260,13 @@ public class BuildingSpawner : MonoBehaviour
         }
     }
 
-    // To add an environment: add it to EnvironmentType, add an ObjectPool[] field, add a case here
     ObjectPool[] GetBuildingPools(EnvironmentType type)
     {
         switch (type)
         {
             case EnvironmentType.City: return cityBuildings;
             case EnvironmentType.Village: return villageBuildings;
-            default: return null; // Jungle: trees only
+            default: return null;
         }
     }
 
@@ -293,7 +281,6 @@ public class BuildingSpawner : MonoBehaviour
     {
         if (pools == null || pools.Length == 0) return null;
 
-        // Random start so null entries don't get skipped in a biased way
         int start = Random.Range(0, pools.Length);
         for (int i = 0; i < pools.Length; i++)
         {
@@ -303,7 +290,6 @@ public class BuildingSpawner : MonoBehaviour
         return null;
     }
 
-    // Size of the object relative to its pivot, in world axes (after rotation)
     void GetFootprint(Transform t, out float minX, out float maxX, out float minZ, out float maxZ)
     {
         Renderer[] renderers = t.GetComponentsInChildren<Renderer>();
@@ -336,12 +322,10 @@ public class BuildingSpawner : MonoBehaviour
     {
         Vector3 o = transform.position;
 
-        // Road edge lines where the buildings will stick
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(new Vector3(-roadHalfWidth, o.y, o.z), new Vector3(-roadHalfWidth, o.y, o.z - despawnDistance));
         Gizmos.DrawLine(new Vector3(roadHalfWidth, o.y, o.z), new Vector3(roadHalfWidth, o.y, o.z - despawnDistance));
 
-        // Despawn line
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(new Vector3(-roadHalfWidth - 15f, o.y, o.z - despawnDistance),
                         new Vector3(roadHalfWidth + 15f, o.y, o.z - despawnDistance));

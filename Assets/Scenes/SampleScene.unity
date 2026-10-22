@@ -502,7 +502,8 @@ MonoBehaviour:
   - {fileID: 1339577281}
   villageTreeChance: 0.35
   randomTreeYaw: 1
-  baseSpeed: 35
+  baseScrollSpeed: 5
+  speedMultiplier: 1
   roadHalfWidth: 8
   setback: {x: 0, y: 0}
   treeSetback: {x: 0, y: 3}
@@ -3095,7 +3096,7 @@ MonoBehaviour:
     lowBoost: 0
     skipWhenFull: 0
   spawnInterval: {x: 2, y: 4}
-  despawnDistance: 150
+  despawnDistance: 250
   avoidOverlap: 1
   overlapHalfExtents: {x: 1, y: 1, z: 2}
   logSpawns: 1
@@ -3108,7 +3109,7 @@ Transform:
   m_GameObject: {fileID: 619670984}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.05723, y: 0.1, z: 101.6}
+  m_LocalPosition: {x: -0.05723, y: 0.1, z: 201.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4611,7 +4612,7 @@ MonoBehaviour:
   roadLength: 200
   tilingY: 3
   direction: -1
-  baseScrollSpeed: 50
+  baseScrollSpeed: 10
   speedMultiplier: 1
 --- !u!1 &966592358
 GameObject:
@@ -5280,15 +5281,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c06008d56c929ee4d8f9dcd6d750c679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpeed
-  startBaseSpeed: 20
-  maxBaseSpeed: 50
+  startBaseSpeed: 50
+  maxBaseSpeed: 100
   baseSpeedGain: 0.05
-  startSpeedLimit: 50
-  maxSpeedLimit: 100
+  startSpeedLimit: 100
+  maxSpeedLimit: 200
   speedLimitGain: 0.08
-  acceleration: 12
-  deceleration: 8
-  boostFuelPerSecond: 6
+  acceleration: 30
+  deceleration: 30
+  boostFuelPerSecond: 4
   fuel: {fileID: 1168561987}
 --- !u!114 &1168561989
 MonoBehaviour:
@@ -6379,7 +6380,8 @@ MonoBehaviour:
   - {fileID: 531487105}
   grassTiles:
   - {fileID: 1072006013}
-  baseSpeed: 35
+  baseScrollSpeed: 5
+  speedMultiplier: 1
   roadHalfWidth: 8
   edgeOverlap: 0.05
   left:
@@ -8094,7 +8096,7 @@ MonoBehaviour:
     speedRange: {x: 0, y: 0}
   spawnInterval: {x: 0.8, y: 2}
   laneCooldown: 1.5
-  despawnDistance: 120
+  despawnDistance: 250
 --- !u!4 &1840403035
 Transform:
   m_ObjectHideFlags: 0
@@ -8104,7 +8106,7 @@ Transform:
   m_GameObject: {fileID: 1840403033}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 96.8}
+  m_LocalPosition: {x: 0, y: 0, z: 206.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

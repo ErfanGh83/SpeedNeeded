@@ -12,13 +12,13 @@ public class GroundSpawner : MonoBehaviour
         [Tooltip("Y rotation of the tiles on this side. Use 180 if the tile texture or shape should face the other way.")]
         public float yaw = 0f;
 
-        [System.NonSerialized] public float lastEdgeZ; // far edge of the most recently spawned tile
+        [System.NonSerialized] public float lastEdgeZ;
     }
 
     class Active
     {
         public Transform t;
-        public float farEdgeOffset; // far Z edge relative to the pivot
+        public float farEdgeOffset;
     }
 
     [Header("Ground pools")]
@@ -28,8 +28,11 @@ public class GroundSpawner : MonoBehaviour
     [SerializeField] ObjectPool[] grassTiles;
 
     [Header("Speed")]
-    [Tooltip("Set this to the same value as the road's base speed (units/s). Tiles move toward -Z.")]
-    [SerializeField] float baseSpeed = 20f;
+    [Tooltip("Constant scroll speed (world units/s) added on top of the game speed. Use the same value as the road's ScrollTexture.")]
+    [SerializeField] float baseScrollSpeed = 5f;
+
+    [Tooltip("Multiplies the game-speed part. Use the same value as the road's ScrollTexture.")]
+    [SerializeField] float speedMultiplier = 1f;
 
     [Header("Road alignment")]
     [Tooltip("Distance from the road center to the road edge. Use the same value as the BuildingSpawner.")]
@@ -55,9 +58,6 @@ public class GroundSpawner : MonoBehaviour
 
     [Tooltip("Fill the whole road with ground at start so it isn't empty.")]
     [SerializeField] bool prewarm = true;
-
-    /// <summary>Change at runtime to keep the ground in sync with the road.</summary>
-    public float BaseSpeed { get => baseSpeed; set => baseSpeed = value; }
 
     readonly List<Active> active = new List<Active>();
     EnvironmentType current = EnvironmentType.City;
@@ -87,7 +87,6 @@ public class GroundSpawner : MonoBehaviour
         }
     }
 
-    // New tiles use the new environment's pools. Tiles already on screen scroll away on their own.
     void OnEnvironmentChanged(EnvironmentType type)
     {
         if (!HasPool(GetPools(type)))
@@ -99,7 +98,6 @@ public class GroundSpawner : MonoBehaviour
         current = type;
     }
 
-    // First fill happens in Update (not Start) so the pools are guaranteed to be set up already
     void Initialize()
     {
         initialized = true;
@@ -116,9 +114,9 @@ public class GroundSpawner : MonoBehaviour
     {
         if (!initialized) Initialize();
 
-        if (!GameManager.IsPlaying) return; // no movement in menu, pause or game over
+        if (!GameManager.IsPlaying) return;
 
-        float delta = baseSpeed * Time.deltaTime;
+        float delta = (baseScrollSpeed + WorldSpeed.Value * speedMultiplier) * Time.deltaTime;
         float limit = transform.position.z - despawnDistance;
 
         for (int i = active.Count - 1; i >= 0; i--)
@@ -131,7 +129,6 @@ public class GroundSpawner : MonoBehaviour
             p.z -= delta;
             a.t.position = p;
 
-            // Back to the pool once the whole tile (its far edge) is behind the limit
             if (p.z + a.farEdgeOffset < limit)
             {
                 ReturnToPool(a.t.gameObject);
@@ -146,7 +143,6 @@ public class GroundSpawner : MonoBehaviour
         FillSide(right);
     }
 
-    // Adds tiles edge to edge along one side until the next one would start beyond the spawn point
     void FillSide(Side side)
     {
         if (!side.enabled) return;
@@ -157,7 +153,7 @@ public class GroundSpawner : MonoBehaviour
         for (int safety = 0; safety < 64; safety++)
         {
             float nearEdgeZ = side.lastEdgeZ - seamOverlap;
-            if (nearEdgeZ > spawnZ) return; // not yet: wait until the ground has moved further
+            if (nearEdgeZ > spawnZ) return;
 
             ObjectPool pool = PickPool(pools);
             if (pool == null) return;
@@ -167,16 +163,15 @@ public class GroundSpawner : MonoBehaviour
             if (obj == null)
             {
                 Debug.LogWarning($"GroundSpawner: pool '{pool.name}' returned nothing. Is its Prefabs list filled in and Can Grow enabled?", pool);
-                return; // try again next frame
+                return;
             }
 
-            obj.transform.rotation = rot; // in case the pool changed it
+            obj.transform.rotation = rot;
 
             GetFootprint(obj.transform, out float minX, out float maxX, out float minZ, out float maxZ);
 
             float pivotZ = nearEdgeZ - minZ;
 
-            // The edge facing the road goes on the road edge line (slightly under the road), the tile grows outward
             float edgeX = side.direction * (roadHalfWidth - edgeOverlap);
             float pivotX = side.direction < 0 ? edgeX - maxX : edgeX - minX;
 
@@ -187,7 +182,6 @@ public class GroundSpawner : MonoBehaviour
         }
     }
 
-    // Village and Jungle both use the grass tiles. To give an environment its own tiles, add a field and change its case.
     ObjectPool[] GetPools(EnvironmentType type)
     {
         switch (type)
@@ -210,7 +204,6 @@ public class GroundSpawner : MonoBehaviour
     {
         if (pools == null || pools.Length == 0) return null;
 
-        // Random start so null entries don't get skipped in a biased way
         int start = Random.Range(0, pools.Length);
         for (int i = 0; i < pools.Length; i++)
         {
@@ -220,7 +213,6 @@ public class GroundSpawner : MonoBehaviour
         return null;
     }
 
-    // Size of the tile relative to its pivot, in world axes (after rotation)
     void GetFootprint(Transform t, out float minX, out float maxX, out float minZ, out float maxZ)
     {
         Renderer[] renderers = t.GetComponentsInChildren<Renderer>();
@@ -253,12 +245,10 @@ public class GroundSpawner : MonoBehaviour
     {
         Vector3 o = transform.position;
 
-        // Road edge lines where the ground starts
         Gizmos.color = Color.green;
         Gizmos.DrawLine(new Vector3(-roadHalfWidth, o.y, o.z), new Vector3(-roadHalfWidth, o.y, o.z - despawnDistance));
         Gizmos.DrawLine(new Vector3(roadHalfWidth, o.y, o.z), new Vector3(roadHalfWidth, o.y, o.z - despawnDistance));
 
-        // Despawn line
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(new Vector3(-roadHalfWidth - 15f, o.y, o.z - despawnDistance),
                         new Vector3(roadHalfWidth + 15f, o.y, o.z - despawnDistance));
