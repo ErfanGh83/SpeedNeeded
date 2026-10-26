@@ -12,6 +12,8 @@ public class BuildingSpawner : MonoBehaviour
         public int direction = -1;
         [Tooltip("Y rotation of the buildings on this side (e.g. 0 on the left, 180 on the right so they face the road).")]
         public float yaw = 0f;
+        [Tooltip("Extra empty space between the road edge and everything beside it (buildings and trees). Added on top of the setback values.")]
+        [SerializeField] public float roadEdgeOffset = 0f;
 
         [System.NonSerialized] public float lastEdgeZ;
         [System.NonSerialized] public float gapRoll;
@@ -215,7 +217,7 @@ public class BuildingSpawner : MonoBehaviour
             float pivotZ = nearEdgeZ - minZ;
 
             Vector2 sb = !isTree ? setback : (jungle ? jungleTreeSetback : treeSetback);
-            float edgeX = side.direction * (roadHalfWidth + Random.Range(sb.x, sb.y));
+            float edgeX = side.direction * (roadHalfWidth + side.roadEdgeOffset + Random.Range(sb.x, sb.y));
             float pivotX = side.direction < 0 ? edgeX - maxX : edgeX - minX;
 
             obj.transform.position = new Vector3(pivotX, transform.position.y, pivotZ);

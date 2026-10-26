@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MenuButtons : MonoBehaviour
 {
+    [SerializeField] UIStateManager ui;
+
     public void Play()
     {
         if (GameManager.Instance != null)
@@ -24,6 +26,16 @@ public class MenuButtons : MonoBehaviour
     {
         if (GameManager.Instance != null)
             GameManager.Instance.ReturnToMenu();
+    }
+
+    public void OpenSettings()
+    {
+        if (ui != null) ui.OnSettingsClicked();
+    }
+
+    public void CloseSettings()
+    {
+        if (ui != null) ui.OnSettingsBackClicked();
     }
 
     public void Exit()

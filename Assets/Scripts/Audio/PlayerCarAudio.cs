@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlayerCarAudio : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class PlayerCarAudio : MonoBehaviour
     [SerializeField, Range(0f, 1f)] float sfxVolume = 1f;
     [SerializeField, Range(0f, 1f)] float musicVolume = 0.35f;
     [SerializeField, Range(0f, 1f)] float pausedMusicMultiplier = 0.4f;
+
+    [Header("Mixer")]
+    [SerializeField] AudioMixerGroup sfxGroup;
+    [SerializeField] AudioMixerGroup musicGroup;
 
     [Header("Engine pitch")]
     [SerializeField] float enginePitchMin = 0.8f;
@@ -52,15 +57,15 @@ public class PlayerCarAudio : MonoBehaviour
         if (fuel == null) fuel = GetComponentInParent<FuelSystem>();
         if (car == null) car = GetComponentInParent<CarController>();
 
-        engineSource = CreateSource(engineLoop, true, engineVolume);
-        flameStartSource = CreateSource(flameStart, false, flameVolume);
-        flameLoopSource = CreateSource(flameLoop, true, flameVolume);
-        sfxSource = CreateSource(null, false, 1f);
-        musicSource = CreateSource(music, true, musicVolume);
+        engineSource = CreateSource(engineLoop, true, engineVolume, sfxGroup);
+        flameStartSource = CreateSource(flameStart, false, flameVolume, sfxGroup);
+        flameLoopSource = CreateSource(flameLoop, true, flameVolume, sfxGroup);
+        sfxSource = CreateSource(null, false, 1f, sfxGroup);
+        musicSource = CreateSource(music, true, musicVolume, musicGroup);
         musicSource.ignoreListenerPause = true;
     }
 
-    AudioSource CreateSource(AudioClip clip, bool loop, float volume)
+    AudioSource CreateSource(AudioClip clip, bool loop, float volume, AudioMixerGroup group)
     {
         AudioSource source = gameObject.AddComponent<AudioSource>();
         source.clip = clip;
@@ -68,6 +73,7 @@ public class PlayerCarAudio : MonoBehaviour
         source.volume = volume;
         source.playOnAwake = false;
         source.spatialBlend = 0f;
+        source.outputAudioMixerGroup = group;
         return source;
     }
 
@@ -131,14 +137,19 @@ public class PlayerCarAudio : MonoBehaviour
     {
         if (music != null) musicSource.Play();
 
-        if (GameManager.Instance == null && engineLoop != null) engineSource.Play();
+        // The game may already be running before this component subscribes to
+        // OnStateChanged, so synchronize with the current state here as well.
+        if (GameManager.IsPlaying && engineLoop != null && !engineSource.isPlaying)
+            engineSource.Play();
     }
 
     void Update()
     {
         if (!GameManager.IsPlaying || speed == null) return;
 
-        float t = Mathf.Clamp01(speed.CurrentSpeed / speedForMaxPitch);
+        float t = speedForMaxPitch > 0f
+            ? Mathf.Clamp01(speed.CurrentSpeed / speedForMaxPitch)
+            : 1f;
         engineSource.pitch = Mathf.Lerp(enginePitchMin, enginePitchMax, t);
 
         if (speed.IsBoosting && flameLoop != null && !flameStartSource.isPlaying && !flameLoopSource.isPlaying)

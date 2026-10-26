@@ -8,6 +8,10 @@ public class UIStateManager : MonoBehaviour
     [SerializeField] GameObject hudPanel;
     [SerializeField] GameObject pausePanel;
     [SerializeField] GameObject gameOverPanel;
+    [SerializeField] GameObject settingsPanel;
+
+    [Header("Settings")]
+    [SerializeField] SettingsMenu settings;
 
     [Header("HUD")]
     [Tooltip("Keep the HUD visible behind the pause menu.")]
@@ -21,6 +25,7 @@ public class UIStateManager : MonoBehaviour
     [SerializeField] GameObject newHighScoreBadge;
 
     GameManager gm;
+    bool settingsOpen;
 
     void OnEnable()
     {
@@ -43,10 +48,14 @@ public class UIStateManager : MonoBehaviour
 
     void Show(GameState state)
     {
-        SetActive(startMenuPanel, state == GameState.Menu);
+        if (state != GameState.Menu && state != GameState.Paused)
+            settingsOpen = false;
+
+        SetActive(startMenuPanel, state == GameState.Menu && !settingsOpen);
         SetActive(hudPanel, state == GameState.Running || (state == GameState.Paused && showHudWhilePaused));
-        SetActive(pausePanel, state == GameState.Paused);
+        SetActive(pausePanel, state == GameState.Paused && !settingsOpen);
         SetActive(gameOverPanel, state == GameState.GameOver);
+        SetActive(settingsPanel, settingsOpen);
 
         if (state == GameState.GameOver)
             FillGameOver();
@@ -66,6 +75,24 @@ public class UIStateManager : MonoBehaviour
     {
         if (go != null && go.activeSelf != active)
             go.SetActive(active);
+    }
+
+    public void OnSettingsClicked()
+    {
+        if (gm == null) return;
+
+        settingsOpen = true;
+        if (settings != null) settings.ResetToSaved();
+        Show(gm.State);
+    }
+
+    public void OnSettingsBackClicked()
+    {
+        if (gm == null) return;
+
+        settingsOpen = false;
+        if (settings != null) settings.ResetToSaved();
+        Show(gm.State);
     }
 
     public void OnPlayClicked()
