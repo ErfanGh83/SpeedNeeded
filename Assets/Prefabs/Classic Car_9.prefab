@@ -311,6 +311,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fccac5b9be372f7489ca5182b23969ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrafficCar
+  changeChance: 0.35
+  timeBetweenChanges: {x: 1.5, y: 4}
+  warningTime: 1
+  laneChangeSpeed: 4
+  clearDistance: 10
+  wallDistance: 14
+  stopNearPlayerDistance: 30
 --- !u!54 &-3098996244979373062
 Rigidbody:
   m_ObjectHideFlags: 0
